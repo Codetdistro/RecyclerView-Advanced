@@ -1,10 +1,12 @@
 package com.example.recyclerview.layout_2
 
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.media.Image
+import android.widget.ImageView
 
-data class recycler_data(
-    val img:Int,
+data class YoutubeData(
+    val img:Drawable,
     val head: String,
     val body: String
 )
