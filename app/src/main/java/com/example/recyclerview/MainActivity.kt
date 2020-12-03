@@ -1,29 +1,19 @@
 package com.example.recyclerview
 
 
-import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.recyclerview.layout_2.YoutubeAdapter
-import com.example.recyclerview.layout_2.YoutubeData
+import com.example.recyclerview.news.data
 import kotlinx.android.synthetic.main.activity_main.*
+import net.simplifiedcoding.data.network.NetworkService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class
-MainActivity : AppCompatActivity() {
-
-    private var  list=ArrayList<RecyclerData>() // [RecyclerData,RecyclerData,RecyclerData]
-    lateinit var  data : RecyclerData
+class MainActivity : AppCompatActivity() {
 
 
-    private var list2 = ArrayList<YoutubeData>()
-    lateinit var  data2:YoutubeData
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -31,33 +21,16 @@ MainActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)//Linear, Grid, Card, Horizontal
 
+        val api = NetworkService()
+        api.getNews().enqueue(object : Callback<data> {
+            override fun onResponse(call: Call<data>, response: Response<data>) {
+                var body = response.body()
+                recyclerView.adapter = YoutubeAdapter(body!!.articles)
+            }
 
+            override fun onFailure(call: Call<data>, t: Throwable) {
+            }
 
-//        val names = arrayListOf("Anne", "Peter", "Jeff","Inside Out","Fury","Martian","Fantasy",
-//            "Awakens","Rogue","Anne", "Peter", "Jeff","Inside Out","Fury","Anne", "Peter", "Jeff","Inside Out","Fury")
-//        for (i in 0..17){
-//            data = RecyclerData(i.toString(),names[i])
-//            list.add(data)
-//        }
-//        recyclerView.apply {
-//            adapter = RecyclerAdapter(list)
-//        }
-
-
-
-        val img: Drawable? = getDrawable(R.drawable.demo)
-
-        val head = arrayListOf("Anne", "Peter", "Jeff","Inside Out","Fury","Martian","Fantasy",
-            "Awakens","Rogue","Anne", "Peter", "Jeff","Inside Out","Fury","Anne", "Peter", "Jeff","Inside Out","Fury",)
-
-        val body = "This sample, implemented in the DbRedditPostRepository " +
-                "class, demonstrates how to set up a Repository that will use the local"
-
-        for (i in 0..17){
-            data2 = YoutubeData(img!!,head[i],body)
-            list2.add(data2)
-        }
-        recyclerView.adapter = YoutubeAdapter(list2)
-
+        })
     }
 }
