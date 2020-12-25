@@ -9,14 +9,16 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 interface NetworkService {
 
-    @GET("v2/everything?q=bitcoin&from=2020-11-02&sortBy=publishedAt&apiKey=b150f9940f014f67bbf4d95413a274b4")
-    fun getNews() : Call<data>
-
-
+    @GET("v2/top-headlines?country=us&category=business")
+    fun getNews(
+        @Query("apiKey") key:String
+    ):Call<data>
 
     companion object{
         operator fun invoke() : NetworkService {
